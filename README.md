@@ -1,4 +1,4 @@
-My code for the card game Casino (rules can be found here:http://www.pagat.com/fishing/casino.html)
+My code for the card game Casino (rules can be found here: http://www.pagat.com/fishing/casino.html)
 
 I'm working on making the card game Casino using pygame. Currently you can only play one hand against the computer, but in the future I hope to add the following things:
 
