@@ -2,7 +2,7 @@ My code for the card game Casino (rules can be found here: http://www.pagat.com/
 
 I'm working on making the card game Casino using pygame. In the future I hope to add the following things:
 
--Making the computer player smarter
+-Making the computer player smarter (probably with levels to choose from since the computer wins against me sometimes as is!)
 
 -Play online against another person (instead of the computer)
 
