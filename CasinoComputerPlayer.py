@@ -26,7 +26,7 @@ def cardsValue(cardList): #counts up how valuable a list of cards would be if yo
 def discardValue(card): #if you're trying to decide what card to discard, use this to find out what a card's value is, and then minimize over it
     return cardsValue([card])
 
-def getComputerMove(player, table):
+def getComputerMove(player, otherPlayer, table):
     ###this function returns a tuple with (0) the type of move followed by (1) a tuple with:
     ###(0) the card to be played from the hand
     ###(1) the list of cards from the table to play
@@ -74,27 +74,30 @@ def getComputerMove(player, table):
 
     if len(player.hand) > 1: #you can't build unless you have another card to take with!
         for card in player.hand: #this will be the card to take with next time
-            buildChoices[card] = []
-            cardCanTakeBuild = False
-            otherCardsList = player.hand[:]
-            otherCardsList.remove(card)
-            for combination in allCardCombinations:               
-                for otherCard in otherCardsList: #the other card from your hand has to be in the resulting build                
-                    if multiplesCheck(card.rank, list(combination)+[otherCard]): #if that combination would be a legal build to take with a card of this rank
-                        buildChoices[card].append(list(combination)+[otherCard]) #put it in the list (with the card to actually play this time at the end
-                        buildPossible = True #which means we can build (don't have to discard)...
-                        cardCanTakeBuild = True
-                    
-            if card.rank in player.currentBuilds: #if we're already building to that
-                for c in otherCardsList:
-                    if c.rank == card.rank: #if there's a second card of this rank still in your hand
-                        cardCanTakeBuild = True
-                        buildChoices[card].append([c]) #you could just add that to the build
-
-            if card.rank > 10:
+            if card.rank <= 10 and card.rank not in otherPlayer.currentBuilds:
+                buildChoices[card] = []
                 cardCanTakeBuild = False
-            if cardCanTakeBuild == False:
-                del buildChoices[card] #we can get rid of the blank dictionary entry if it turns out that card couldn't actually take a build of anything
+                otherCardsList = player.hand[:]
+                otherCardsList.remove(card)
+                for combination in allCardCombinations:               
+                    for otherCard in otherCardsList: #the other card from your hand has to be in the resulting build                
+                        if multiplesCheck(card.rank, list(combination)+[otherCard]): #if that combination would be a legal build to take with a card of this rank
+                            buildChoices[card].append(list(combination)+[otherCard]) #put it in the list (with the card to actually play this time at the end
+                            buildPossible = True #which means we can build (don't have to discard)...
+                            cardCanTakeBuild = True
+                        
+                if card.rank in player.currentBuilds: #if we're already building to that
+                    for c in otherCardsList:
+                        if c.rank == card.rank: #if there's a second card of this rank still in your hand
+                            cardCanTakeBuild = True
+                            buildChoices[card].append([c]) #you could just add that to the build
+
+                #if card.rank > 10 or card.rank in otherPlayer.currentBuilds:
+#                    if card.rank in otherPlayer.currentBuilds:
+#                        print "i fixed this bug!"
+#                    cardCanTakeBuild = False
+                if cardCanTakeBuild == False:
+                    del buildChoices[card] #we can get rid of the blank dictionary entry if it turns out that card couldn't actually take a build of anything
 
 
 ##------------ Deciding what move to do -----------##
