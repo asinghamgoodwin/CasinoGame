@@ -50,6 +50,15 @@ class GameState():
         self.waitGO = False
             #right before gameOver
 
+        self.newGame = False
+            #after gameOver, to switch dealers and clear hands before a new game
+
+        self.roundOver = False
+            #once a player reaches 21 points, to display the final score
+
+        self.waitRO = False
+            #right before roundOver
+        
     def clear(self):
         self.prep = False
         self.waitP = False
@@ -62,4 +71,6 @@ class GameState():
         self.last = False
         self.gameOver = False
         self.waitGO = False
-
+        self.newGame = False
+        self.roundOver = False
+        self.waitRO = False
