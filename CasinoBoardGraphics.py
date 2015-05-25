@@ -222,7 +222,7 @@ def buildComputerMove(tup,moveType, window=w): #Gives a description of the last 
     if moveType == "Discard":
         first = "The computer discarded:"
         second = textForCard(tup[0])
-    else:
+    elif moveType == "Take":
         first = "The computer took:"
         second = ""
         for card in tup[1]:
@@ -230,6 +230,11 @@ def buildComputerMove(tup,moveType, window=w): #Gives a description of the last 
         if tup[2] > 0:
             second += "the built "+str(tup[2])+"s"
         third = "With the:"
+        fourth = textForCard(tup[0])
+    else:
+        first = "The computer built:"
+        second = str(tup[2])+"s"
+        third = "By playing the:"
         fourth = textForCard(tup[0])
         
     pygame.draw.rect(window, BEIGE, (24*31, 24*1, 24*11, 24*6))
