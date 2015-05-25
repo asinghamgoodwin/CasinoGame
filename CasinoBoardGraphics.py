@@ -62,7 +62,7 @@ def buildScore(playerONE, playerTWO, window=w):
     window.blit(dealer, dealerRectObj)
 
 
-def buildFinalScore(player1, player2, window=w): #to display the score (briefly) at the end of a game
+def buildGameScore(player1, player2, window=w): #to display the score (briefly) at the end of a game
     pygame.draw.rect(window, BEIGE, (24*16, 24*10, 24*13, 24*7))
     #who is top and bottom
     if player1.side == "top":
@@ -76,7 +76,7 @@ def buildFinalScore(player1, player2, window=w): #to display the score (briefly)
     players = [p1, p2]
     scoreFont = pygame.font.Font('freesansbold.ttf', 30)
     for i in range(2):
-        score = scoreFont.render(players[i].name+"'s Score: "+str(players[i].totalPoints), True, RED, BEIGE)
+        score = scoreFont.render(players[i].name+"'s Score: "+str(players[i].calculatePoints()), True, RED, BEIGE)
         scoreRectObj = score.get_rect()
         scoreRectObj.topleft = (24*16.5,24*(i*2+13))
         window.blit(score, scoreRectObj)
@@ -90,6 +90,40 @@ def buildFinalScore(player1, player2, window=w): #to display the score (briefly)
         result = p2.name+" Wins!"
 
     win = scoreFont.render(result, True, RED, BEIGE)
+    winRectObj = score.get_rect()
+    winRectObj.topleft = (24*16.5,24*11)
+    window.blit(win, winRectObj)
+
+
+def buildRoundScore(player1, player2, window=w): #to display the score (briefly) at the end of a game
+    pygame.draw.rect(window, RED, (24*16, 24*10, 24*13, 24*7))
+    #who is top and bottom
+    if player1.side == "top":
+        p1 = player1
+        p2 = player2
+    else:
+        p1 = player2
+        p2 = player1
+
+    #write in their current total scores
+    players = [p1, p2]
+    scoreFont = pygame.font.Font('freesansbold.ttf', 30)
+    for i in range(2):
+        score = scoreFont.render(players[i].name+"'s Score: "+str(players[i].totalPoints), True, BEIGE, RED)
+        scoreRectObj = score.get_rect()
+        scoreRectObj.topleft = (24*16.5,24*(i*2+13))
+        window.blit(score, scoreRectObj)
+
+    #displaying who won
+    if p1.totalPoints == p2.totalPoints:
+        result = "It's a tie!"
+    elif p1.totalPoints > p2.totalPoints:
+        result = p1.name+" Wins the round!"
+    else:
+        result = p2.name+" Wins the round!"
+
+    scoreFont2 = pygame.font.Font('freesansbold.ttf', 24)
+    win = scoreFont2.render(result, True, BEIGE, RED)
     winRectObj = score.get_rect()
     winRectObj.topleft = (24*16.5,24*11)
     window.blit(win, winRectObj)
@@ -286,5 +320,4 @@ def selectBuildChoice(rank, buildChoicesDict, window=w): #draw a yellow rectangl
     for key in buildChoicesDict.keys():
         if buildChoicesDict[key] == rank:
             pygame.draw.rect(window, YELLOW, (24*(33+key*2)-6, 24*25-6, 24*1.3+12, 24*1+12))
-
 
