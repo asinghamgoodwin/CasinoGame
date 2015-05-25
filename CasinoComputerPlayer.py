@@ -76,10 +76,9 @@ def getComputerMove(player, table):
         for card in player.hand: #this will be the card to take with next time
             buildChoices[card] = []
             cardCanTakeBuild = False
-            for combination in allCardCombinations:
-                otherCardsList = player.hand[:]
-                otherCardsList.remove(card)
-                
+            otherCardsList = player.hand[:]
+            otherCardsList.remove(card)
+            for combination in allCardCombinations:               
                 for otherCard in otherCardsList: #the other card from your hand has to be in the resulting build                
                     if multiplesCheck(card.rank, list(combination)+[otherCard]): #if that combination would be a legal build to take with a card of this rank
                         buildChoices[card].append(list(combination)+[otherCard]) #put it in the list (with the card to actually play this time at the end
@@ -92,6 +91,8 @@ def getComputerMove(player, table):
                         cardCanTakeBuild = True
                         buildChoices[card].append([c]) #you could just add that to the build
 
+            if card.rank > 10:
+                cardCanTakeBuild = False
             if cardCanTakeBuild == False:
                 del buildChoices[card] #we can get rid of the blank dictionary entry if it turns out that card couldn't actually take a build of anything
 
