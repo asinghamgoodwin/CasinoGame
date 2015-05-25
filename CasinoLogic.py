@@ -225,7 +225,7 @@ class Take(Move):
             handRanksLeft = [card.rank for card in self.player.hand if card != self.cardPlayed] #list of the ranks left in the hand
 
             #player's builds that'll be left on the table after this turn            
-            if self.buildRank == 0:
+            if self.buildRank == 0 or self.buildRank not in self.player.currentBuilds:
                     buildsLeft = self.player.currentBuilds[:]
             else:
                 if self.buildRank in self.player.currentBuilds:
@@ -279,4 +279,3 @@ def rankChoices4Build(player): #returns which ranks a player could build to base
             choices.add(card.rank)
     return list(choices)
     
-
