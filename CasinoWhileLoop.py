@@ -281,7 +281,7 @@ while True: # main game loop
             spot.unselect()
 
     if  gameState.computerMove:
-            computerMoveType, tup = getComputerMove(player2, table)
+            computerMoveType, tup = getComputerMove(player2, player1, table)
             toSelect = [tup[0]]+tup[1]
             if tup[2] > 0 and tup[2] in table.builds:
                 toSelect += table.builds[tup[2]]
