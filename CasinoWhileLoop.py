@@ -31,7 +31,7 @@ pygame.display.set_caption('Casino v5')
 gameState = GameState() #it starts in the prep state
 
 gameNumber = 0 #0+
-handNumber = 0 #0-5
+handNumber = 4 #0-5
 turnNumber = 0 #0-7
 
 firstTime = True #keeps track of whether its the computer's first move or not, to display what move it made
@@ -43,11 +43,11 @@ table = Table()
 player1 = HumanPlayer(False, "Alicia")
 player2 = ComputerPlayer(True)
 
+player1.totalPoints = 20
+
 #keeps track of what move the human is currently working on
 #moveType = None  ###<<--- this is now in the variables doc
 
-
-#showBuildChoices = False
 
 #keeps track of what move the computer is currently working on
 computerMoveType = None
@@ -82,6 +82,9 @@ while True: # main game loop
         gameState.gameOver = True
         
     elif gameState.waitCM:
+        if turnNumber == 0:
+            pygame.time.wait(3000)
+            #if handNumber == 0: it would be nice to put something here saying "its a new game! you're the dealer!"
         gameState.clear()
         gameState.computerMove = True
         
@@ -93,6 +96,7 @@ while True: # main game loop
             gameState.waitP = True
             turnNumber = 0
             if handNumber == 5:
+                gameState.clear()
                 gameState.last = True
             else:
                 handNumber += 1
@@ -103,6 +107,11 @@ while True: # main game loop
     elif gameState.waitCM2:
         gameState.clear()
         gameState.displayCM = True
+
+    elif gameState.waitRO:
+        pygame.time.wait(3000)
+        gameState.clear()
+        gameState.roundOver = True
 
 
     #-- the prep state: dealing cards to the two players and possibly the table --#
@@ -124,9 +133,12 @@ while True: # main game loop
 
         buildChoicesDict = updatedBuildChoicesDict(player1)
 
-
+        #changing the state based on who is the dealer
         gameState.clear()
-        gameState.waitGM = True #wait for their move
+        if player1.dealer:
+            gameState.waitCM = True
+        else:
+            gameState.waitGM = True
        
 
 
@@ -138,7 +150,7 @@ while True: # main game loop
     if firstTime == False:
         buildComputerMove(tup, computerMoveType)
     
-    if turnNumber % 2 == 0 and gameState.gettingMove:
+    if gameState.gettingMove:
         if moveType != None:
             buildMoveType(moveType)
         if illegalMove != False:
@@ -163,12 +175,72 @@ while True: # main game loop
         gameState.clear()
         gameState.waitGO = True
 
+    if gameState.newGame:
+        pygame.time.wait(4000) #gives them time to see the score of the last round
+
+        #reset all of the variables and stuff
+        gameNumber += 1
+        handNumber = 0
+        turnNumber = 0
+
+        firstTime = True
+                        
+        deck = Deck()
+        deck.shuffle()
+        table = Table()
+
+        moveType = None
+
+        computerMoveType = None
+        computerMove = None
+        tup = None
+
+        buildRank = 0
+
+        illegalMove = False
+
+        p1Last = 0
+        p2Last = 0
+
+        for spot in cardSpots:
+            spot.removeCard()
+            
+
+        
+        #clearing the hands, piles, etc.
+        player1.clearEverything()
+        player2.clearEverything()
+
+        #switching who is dealer
+        oneWasDealer = player1.dealer
+        
+        if oneWasDealer:
+            player1.dealer = False
+            player2.dealer = True
+        else:
+            player1.dealer = True
+            player2.dealer = False
+
+        gameState.clear()
+        gameState.prep = True
+
+
+    if gameState.roundOver:
+        buildRoundScore(player1, player2)
+        
+
     if gameState.gameOver:
         player1.totalPoints += player1.calculatePoints()
-        player1.pile = []
         player2.totalPoints += player2.calculatePoints()
-        player2.pile = []
-        buildFinalScore(player1, player2)
+        buildGameScore(player1, player2)
+
+        gameState.clear()
+        if player1.totalPoints < 21 and player2.totalPoints < 21:
+            gameState.newGame = True
+        else:
+            for spot in cardSpots:
+                spot.removeCard()
+            gameState.waitRO = True
 
         
     else:
@@ -196,7 +268,7 @@ while True: # main game loop
         for spot in cardSpots:
             spot.unselect()
 
-    if  turnNumber % 2 != 0 and gameState.computerMove:
+    if  gameState.computerMove:
             #this is the other player's turn. For now it'll be a computer
             computerMoveType, tup = getComputerMove(player2, table)
 
@@ -224,7 +296,7 @@ while True: # main game loop
 
 
 
-        if gameState.gettingMove and turnNumber % 2 == 0:
+        if gameState.gettingMove:
             if (event.type == KEYDOWN and event.key == K_d):
                 moveType = "Discard"
                 illegalMove = False
@@ -233,7 +305,6 @@ while True: # main game loop
                 illegalMove = False
             elif (event.type == KEYDOWN and event.key == K_b):
                 moveType = "Build"
-                #showBuildChoices = True
                 illegalMove = False
 
 
@@ -295,8 +366,20 @@ while True: # main game loop
                                 buildChoicesDict = updatedBuildChoicesDict(player1)
 
                             move.execute()
-                            turnNumber += 1
-                            gameState.waitCM = True
+
+                            gameState.clear()
+
+                            if turnNumber == 7:
+                                gameState.waitP = True
+                                turnNumber = 0
+                                if handNumber == 5:
+                                    gameState.clear()
+                                    gameState.last = True
+                                else:
+                                    handNumber += 1
+                            else:
+                                turnNumber += 1
+                                gameState.waitCM = True
                             
                         else:
                             illegalMove = "badMath"
@@ -330,4 +413,3 @@ while True: # main game loop
                                 buildRank = buildChoicesDict[buildChoiceSpot]
                         
     pygame.display.update()
-
