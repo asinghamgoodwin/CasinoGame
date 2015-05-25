@@ -46,7 +46,7 @@ def buildScore(playerONE, playerTWO, window=w):
     for i in range(2):
         score = scoreFont.render(players[i].name+"'s Score: "+str(players[i].totalPoints), True, BLUE, GREEN)
         scoreRectObj = score.get_rect()
-        scoreRectObj.topleft = (24*4,24*(i*1.5+1.5))
+        scoreRectObj.topleft = (24*3.5,24*(i*1.5+1.5))
         window.blit(score, scoreRectObj)
 
     #add in who is the dealer this turn
@@ -58,12 +58,12 @@ def buildScore(playerONE, playerTWO, window=w):
     dealerFont = pygame.font.Font('freesansbold.ttf', 13)
     dealer = dealerFont.render("(Dealer)", True, BLUE, GREEN)
     dealerRectObj = dealer.get_rect()
-    dealerRectObj.topleft = (24*1.7,24*(d*1.5+1.7))
+    dealerRectObj.topleft = (24*1.2,24*(d*1.5+1.7))
     window.blit(dealer, dealerRectObj)
 
 
 def buildGameScore(player1, player2, window=w): #to display the score (briefly) at the end of a game
-    pygame.draw.rect(window, BEIGE, (24*16, 24*10, 24*13, 24*7))
+    pygame.draw.rect(window, BEIGE, (24*14, 24*10, 24*17, 24*7))
     #who is top and bottom
     if player1.side == "top":
         p1 = player1
@@ -78,25 +78,27 @@ def buildGameScore(player1, player2, window=w): #to display the score (briefly) 
     for i in range(2):
         score = scoreFont.render(players[i].name+"'s Score: "+str(players[i].calculatePoints()), True, RED, BEIGE)
         scoreRectObj = score.get_rect()
-        scoreRectObj.topleft = (24*16.5,24*(i*2+13))
+        scoreRectObj.topleft = (24*14.5,24*(i*2+13))
         window.blit(score, scoreRectObj)
 
     #displaying who won
-    if p1.totalPoints == p2.totalPoints:
+    p1Score = p1.calculatePoints()
+    p2Score = p2.calculatePoints()
+    if p1Score == p2Score:
         result = "It's a tie!"
-    elif p1.totalPoints > p2.totalPoints:
+    elif p1Score > p2Score:
         result = p1.name+" Wins!"
     else:
         result = p2.name+" Wins!"
 
     win = scoreFont.render(result, True, RED, BEIGE)
     winRectObj = score.get_rect()
-    winRectObj.topleft = (24*16.5,24*11)
+    winRectObj.topleft = (24*14.5,24*11)
     window.blit(win, winRectObj)
 
 
 def buildRoundScore(player1, player2, window=w): #to display the score (briefly) at the end of a game
-    pygame.draw.rect(window, RED, (24*16, 24*10, 24*13, 24*7))
+    pygame.draw.rect(window, RED, (24*14, 24*10, 24*17, 24*7))
     #who is top and bottom
     if player1.side == "top":
         p1 = player1
@@ -111,7 +113,7 @@ def buildRoundScore(player1, player2, window=w): #to display the score (briefly)
     for i in range(2):
         score = scoreFont.render(players[i].name+"'s Score: "+str(players[i].totalPoints), True, BEIGE, RED)
         scoreRectObj = score.get_rect()
-        scoreRectObj.topleft = (24*16.5,24*(i*2+13))
+        scoreRectObj.topleft = (24*14.5,24*(i*2+13))
         window.blit(score, scoreRectObj)
 
     #displaying who won
@@ -125,7 +127,7 @@ def buildRoundScore(player1, player2, window=w): #to display the score (briefly)
     scoreFont2 = pygame.font.Font('freesansbold.ttf', 24)
     win = scoreFont2.render(result, True, BEIGE, RED)
     winRectObj = score.get_rect()
-    winRectObj.topleft = (24*16.5,24*11)
+    winRectObj.topleft = (24*14.5,24*11)
     window.blit(win, winRectObj)
 
 
