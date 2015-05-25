@@ -31,7 +31,7 @@ pygame.display.set_caption('Casino v5')
 gameState = GameState() #it starts in the prep state
 
 gameNumber = 0 #0+
-handNumber = 4 #0-5
+handNumber = 0 #0-5
 turnNumber = 0 #0-7
 
 firstTime = True #keeps track of whether its the computer's first move or not, to display what move it made
@@ -43,7 +43,6 @@ table = Table()
 player1 = HumanPlayer(False, "Alicia")
 player2 = ComputerPlayer(True)
 
-player1.totalPoints = 20
 
 #keeps track of what move the human is currently working on
 #moveType = None  ###<<--- this is now in the variables doc
@@ -252,7 +251,7 @@ while True: # main game loop
         if computerMoveType == "Discard":
             computerMove = Discard(table, tup[0], player2, player1)
             discardUI(tup[0])
-        else:
+        elif computerMoveType == "Take":
             computerMove = Take(table, tup[0], player2, player1, tup[1], tup[2])
             takeFromTableUI(tup[0], tup[1]) #hand card, table card list
             if tup[2] > 0:
@@ -260,6 +259,19 @@ while True: # main game loop
                 for i in range(4): #reset this build spot to have nothing in it.
                     if buildRankDict[i] == tup[2]:
                         buildRankDict[i] = 0
+            
+            if handNumber == 5:
+                p2Last = turnNumber
+
+        else:
+            computerMove = Build(table, tup[0], player2, player1, tup[1], tup[2])
+            if tup[2] not in buildRankDict.values(): #create the build in the dictionary if its new
+                for i in range(4): 
+                    if buildRankDict[i] == 0:
+                        buildRankDict[i] = tup[2]
+                        break
+                addToBuildUI(tup[0], tup[1], tup[2])
+                buildRank = 0
 
             if handNumber == 5:
                 p2Last = turnNumber
@@ -269,11 +281,9 @@ while True: # main game loop
             spot.unselect()
 
     if  gameState.computerMove:
-            #this is the other player's turn. For now it'll be a computer
             computerMoveType, tup = getComputerMove(player2, table)
-
             toSelect = [tup[0]]+tup[1]
-            if tup[2] > 0:
+            if tup[2] > 0 and tup[2] in table.builds:
                 toSelect += table.builds[tup[2]]
             for spot in cardSpots:
                 if spot.card in toSelect:
