@@ -21,7 +21,6 @@ from CasinoLogic import suits, Card, Deck, Player, ComputerPlayer, HumanPlayer, 
 from GameState import GameState
 
 
-
 pygame.init()
 pygame.display.set_caption('Casino v5')
 

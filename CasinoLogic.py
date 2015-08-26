@@ -76,6 +76,26 @@ class Player():
                 self.currentBuilds = []
                 self.pile = []
 
+        def arrangeCards(self):
+            myBoringCards = []
+            mySpades = []
+            myBigCasino = []
+            myAces = []
+            myPointSpades = []
+            for card in self.pile:
+                if card.suit == 's':
+                    if card.rank < 3:
+                        myPointSpades.append(card)
+                    else:
+                        mySpades.append(card)
+                elif card.rank == 1:
+                    myAces.append(card)
+                elif card.rank == 10 and card.suit == 'd':
+                    myBigCasino.append(card)
+                else:
+                    myBoringCards.append(card)
+            return {'myBoringCards': myBoringCards, 'myPointSpades': myPointSpades,
+                    'myAces': myAces, 'mySpades': mySpades, 'myBigCasino': myBigCasino}
 
 class ComputerPlayer(Player):
         def __init__(self, dealer):

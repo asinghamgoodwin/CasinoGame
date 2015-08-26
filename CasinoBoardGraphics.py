@@ -3,7 +3,7 @@ import pygame, sys
 from pygame.locals import *
 from CasinoVariables import w
 from CasinoLogic import rankChoices4Build
-
+#from CasinoCardGraphics import paintCard
 
 ##TO DO##
 #-fix buildChoicesDict which sometimes shows too many choices
@@ -68,9 +68,14 @@ def buildGameScore(player1, player2, window=w): #to display the score (briefly) 
     if player1.side == "top":
         p1 = player1
         p2 = player2
+        p1dict = player1.arrangeCards()
+        p2dict = player2.arrangeCards()
+
     else:
         p1 = player2
         p2 = player1
+        p1dict = player2.arrangeCards()
+        p2dict = player1.arrangeCards()
 
     #write in their current total scores
     players = [p1, p2]
@@ -96,6 +101,18 @@ def buildGameScore(player1, player2, window=w): #to display the score (briefly) 
     winRectObj.topleft = (24*14.5,24*11)
     window.blit(win, winRectObj)
 
+    #draw all of the cards in a nice way
+    ##top player, top row
+#    topRowCards = [p1dict['myBigCasino'], p1dict['myAces'], p1dict['myPointSpades'], p1dict['mySpades']]
+#    currentSet = []
+#    for i in xrange(15, 38):
+#        if len(currentSet) == 0:
+#            if len(topRowCards) == 0:
+#                break
+#            currentSet = topRowCards[0][:]
+#            topRowCards.pop(0)
+#            continue
+#        paintCard(currentSet[0], (24*i, 24))
 
 def buildRoundScore(player1, player2, window=w): #to display the score (briefly) at the end of a game
     pygame.draw.rect(window, RED, (24*14, 24*10, 24*17, 24*7))
